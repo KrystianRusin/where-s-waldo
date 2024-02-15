@@ -1,0 +1,14 @@
+.nav-container {
+  background: #030712;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 75%;
+  height: 100px;
+}
+
+.nav-contents {
+  display: flex;
+  gap: 2rem;
+}

@@ -1,12 +1,17 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import Nav from "./containers/Nav";
 import "./App.css";
+import MainContent from "./containers/MainContent";
 
 function App() {
   const [count, setCount] = useState(0);
 
-  return <></>;
+  return (
+    <div className="app-container">
+      <Nav />
+      <MainContent />
+    </div>
+  );
 }
 
 export default App;
