@@ -1,9 +1,13 @@
 import React from "react";
 import "../styles/DifficultyCard.css";
 
-const DifficultyCard = ({ img, difficulty }) => {
+const DifficultyCard = ({ img, difficulty, setLevel }) => {
+  const changeDifficulty = () => {
+    setLevel(difficulty);
+  };
+
   return (
-    <div className="difficulty-card-container">
+    <div className="difficulty-card-container" onClick={changeDifficulty}>
       <img src={img} alt="difficulty" />
       <h2>{difficulty}</h2>
     </div>

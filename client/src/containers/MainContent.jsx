@@ -5,12 +5,16 @@ import hardImg from "../assets/hard.jpg";
 import harderImg from "../assets/harder.jpg";
 import hardestImg from "../assets/hardest.jpg";
 
-const MainContent = () => {
+const MainContent = ({ setLevel }) => {
   return (
     <div className="main-content-container">
-      <DifficultyCard img={hardImg} difficulty="Hard" />
-      <DifficultyCard img={harderImg} difficulty="Harder" />
-      <DifficultyCard img={hardestImg} difficulty="Hardest" />
+      <DifficultyCard img={hardImg} difficulty="Hard" setLevel={setLevel} />
+      <DifficultyCard img={harderImg} difficulty="Harder" setLevel={setLevel} />
+      <DifficultyCard
+        img={hardestImg}
+        difficulty="Hardest"
+        setLevel={setLevel}
+      />
     </div>
   );
 };

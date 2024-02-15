@@ -4,12 +4,16 @@ import "./App.css";
 import MainContent from "./containers/MainContent";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [level, setLevel] = useState("");
+
+  const changeDifficulty = (difficulty) => {
+    setLevel(difficulty);
+  };
 
   return (
     <div className="app-container">
       <Nav />
-      <MainContent />
+      <MainContent setLevel={changeDifficulty} />
     </div>
   );
 }
