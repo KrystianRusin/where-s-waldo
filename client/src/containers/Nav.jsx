@@ -2,11 +2,11 @@ import React from "react";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import "../styles/Nav.css";
 
-const Nav = () => {
+const Nav = ({ resetDifficulty }) => {
   return (
     <div className="nav-container">
       <div className="nav-contents">
-        <h2>Home</h2>
+        <h2 onClick={resetDifficulty}>Home</h2>
         <h2>Leaderboard</h2>
       </div>
       <div>
