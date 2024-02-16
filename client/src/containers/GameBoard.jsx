@@ -81,15 +81,15 @@ const GameBoard = ({ img, difficulty }) => {
         clickPosition.y
     );
 
-    checkTarget("Hard", character);
+    checkTarget(difficulty, character);
 
     setShowDropdown(false);
     setClickPosition(null);
   };
 
-  const checkTarget = async (targetName) => {
+  const checkTarget = async (difficulty, character) => {
     const response = await fetch(
-      `http://localhost:5000/checkTarget?difficulty=${difficulty}&targetName=${targetName}`
+      `http://localhost:5000/checkTarget?difficulty=${difficulty}&targetName=${character}`
     );
 
     // Log the raw response text
@@ -102,9 +102,9 @@ const GameBoard = ({ img, difficulty }) => {
       const radius = 25; // half of the width of the circle (50px / 2)
 
       if (checkIfWithinCircle(circleCenter, point, radius)) {
-        console.log("The point is within the circle");
+        console.log("The target is within the circle");
       } else {
-        console.log("The point is outside the circle");
+        console.log("The target is outside the circle");
       }
     } catch (err) {
       console.error("Failed to parse response text as JSON:", err);
