@@ -9,7 +9,12 @@ const GameBoard = ({ img }) => {
   useEffect(() => {
     const handleWheel = (e) => {
       e.preventDefault();
-      const [timer, setTimer] = useState(0);
+
+      const rect = e.target.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+      e.target.style.transformOrigin = `${x}% ${y}%`;
 
       if (e.deltaY < 0) {
         // Zoom in
