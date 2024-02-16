@@ -3,11 +3,13 @@ import "../styles/GameBoard.css";
 
 const GameBoard = ({ img }) => {
   const [scale, setScale] = useState(1);
+  const [timer, setTimer] = useState(0);
   const containerRef = useRef(null);
 
   useEffect(() => {
     const handleWheel = (e) => {
       e.preventDefault();
+      const [timer, setTimer] = useState(0);
 
       if (e.deltaY < 0) {
         // Zoom in
@@ -26,6 +28,18 @@ const GameBoard = ({ img }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (img) {
+      const intervalId = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [img]);
+
   const handleClick = (e) => {
     const rect = e.target.getBoundingClientRect();
     const x = (e.clientX - rect.left) / scale;
@@ -34,7 +48,8 @@ const GameBoard = ({ img }) => {
   };
 
   return (
-    <div className="game-container" ref={containerRef}>
+    <div className="gameboard-container" ref={containerRef}>
+      <div>Time: {timer} seconds</div>
       <img
         src={img}
         alt="PLACEHOLDER"
