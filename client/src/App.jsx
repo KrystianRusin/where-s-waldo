@@ -29,7 +29,7 @@ function App() {
       <Nav resetDifficulty={resetDifficulty} />
       <div className="game-container">
         {level ? (
-          <GameBoard img={levelImages[level]} />
+          <GameBoard img={levelImages[level]} difficulty={level} />
         ) : (
           <MainContent setLevel={changeDifficulty} />
         )}

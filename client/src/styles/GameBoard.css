@@ -6,7 +6,12 @@
   gap: 1rem;
 }
 
+.image-wrapper {
+  position: relative;
+}
+
 .game-img {
+  position: relative;
   height: 45rem;
   width: auto;
 }
