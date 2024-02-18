@@ -6,6 +6,7 @@ const GameBoard = ({ img, difficulty }) => {
   const [timer, setTimer] = useState(0);
   const containerRef = useRef(null);
 
+  const [foundTargets, setFoundTargets] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [clickPosition, setClickPosition] = useState(null);
@@ -40,9 +41,8 @@ const GameBoard = ({ img, difficulty }) => {
     };
   }, []);
 
-  //useEffect Hook to handle timer
   useEffect(() => {
-    if (img) {
+    if (img && foundTargets.length < characters.length) {
       const intervalId = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 1);
       }, 1000);
@@ -51,7 +51,7 @@ const GameBoard = ({ img, difficulty }) => {
         clearInterval(intervalId);
       };
     }
-  }, [img]);
+  }, [img, foundTargets]);
 
   //Gather coordinates of user click
   const handleClick = (e) => {
@@ -81,7 +81,11 @@ const GameBoard = ({ img, difficulty }) => {
         clickPosition.y
     );
 
-    checkTarget(difficulty, character);
+    const isTargetFound = await checkTarget(difficulty, character);
+
+    if (isTargetFound) {
+      setFoundTargets((prevFoundTargets) => [...prevFoundTargets, character]);
+    }
 
     setShowDropdown(false);
     setClickPosition(null);
@@ -103,11 +107,14 @@ const GameBoard = ({ img, difficulty }) => {
 
       if (checkIfWithinCircle(circleCenter, point, radius)) {
         console.log("The target is within the circle");
+        return true;
       } else {
         console.log("The target is outside the circle");
+        return false;
       }
     } catch (err) {
       console.error("Failed to parse response text as JSON:", err);
+      return false;
     }
   };
 
