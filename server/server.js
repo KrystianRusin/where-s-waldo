@@ -29,11 +29,13 @@ app.get("/targets", async (req, res) => {
 });
 
 app.get("/checkTarget", async (req, res) => {
+  console.log("Check Target" + req.query.difficulty + req.query.targetName);
   try {
     const target = await Target.findOne({
       difficulty: req.query.difficulty,
       targetName: req.query.targetName,
     });
+    console.log("Target From Server" + target);
     if (target) {
       res.json({ x: target.x, y: target.y });
     } else {

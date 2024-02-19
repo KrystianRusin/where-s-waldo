@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import NameModal from "../components/NameModal";
+import checkTarget from "../utils/checkTarget";
+import checkIfWithinCircle from "../utils/checkIfWithinCircle";
 import "../styles/GameBoard.css";
 
 const GameBoard = ({ img, difficulty }) => {
@@ -8,41 +11,16 @@ const GameBoard = ({ img, difficulty }) => {
 
   const [foundTargets, setFoundTargets] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [clickPosition, setClickPosition] = useState(null);
 
   const characters = ["Waldo", "Wizard Whitebeard"];
 
-  //useEffect to handle user zooming in/out
+  //useEffect to handle timer
   useEffect(() => {
-    const handleWheel = (e) => {
-      e.preventDefault();
-
-      const rect = e.target.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      e.target.style.transformOrigin = `${x}% ${y}%`;
-
-      if (e.deltaY < 0) {
-        // Zoom in
-        setScale((prevScale) => Math.min(prevScale + 0.1, 2));
-      } else {
-        // Zoom out
-        setScale((prevScale) => Math.max(prevScale - 0.1, 1));
-      }
-    };
-
-    const container = containerRef.current;
-    container.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      container.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (img && foundTargets.length < characters.length) {
+    // If images is loaded and game is not finished incremenet the timer
+    if (img && !isFinished) {
       const intervalId = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 1);
       }, 1000);
@@ -51,9 +29,15 @@ const GameBoard = ({ img, difficulty }) => {
         clearInterval(intervalId);
       };
     }
-  }, [img, foundTargets]);
+  }, [img, isFinished]);
 
-  //Gather coordinates of user click
+  useEffect(() => {
+    if (isFinished) {
+      console.log("Game finished!");
+    }
+  }, [isFinished]);
+
+  //Gather coordinates of user click as a percentage for responsiveness and display drop down menu
   const handleClick = (e) => {
     const rect = e.target.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -81,99 +65,76 @@ const GameBoard = ({ img, difficulty }) => {
         clickPosition.y
     );
 
-    const isTargetFound = await checkTarget(difficulty, character);
+    const target = await checkTarget(
+      difficulty,
+      character,
+      clickPosition,
+      containerRef.current.getBoundingClientRect().width
+    );
 
-    if (isTargetFound) {
+    if (target && character === target.character) {
       setFoundTargets((prevFoundTargets) => [...prevFoundTargets, character]);
+    }
+    if (foundTargets.length === characters.length - 1) {
+      setIsFinished(true);
     }
 
     setShowDropdown(false);
     setClickPosition(null);
   };
 
-  const checkTarget = async (difficulty, character) => {
-    const response = await fetch(
-      `http://localhost:5000/checkTarget?difficulty=${difficulty}&targetName=${character}`
-    );
-
-    // Log the raw response text
-    const responseText = await response.text();
-
-    try {
-      const data = JSON.parse(responseText);
-      const circleCenter = { x: clickPosition.x, y: clickPosition.y };
-      const point = { x: data.x, y: data.y }; // replace with actual data coordinates
-      const radius = 25; // half of the width of the circle (50px / 2)
-
-      if (checkIfWithinCircle(circleCenter, point, radius)) {
-        console.log("The target is within the circle");
-        return true;
-      } else {
-        console.log("The target is outside the circle");
-        return false;
-      }
-    } catch (err) {
-      console.error("Failed to parse response text as JSON:", err);
-      return false;
-    }
-  };
-
-  const checkIfWithinCircle = (circleCenter, point, radius) => {
-    const dx = circleCenter.x - point.x;
-    const dy = circleCenter.y - point.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    return distance <= radius;
-  };
-
   return (
-    <div className="gameboard-container" ref={containerRef}>
-      <div>Time: {timer} seconds</div>
-      <div className="image-wrapper">
-        <img
-          src={img}
-          alt="PLACEHOLDER"
-          className="game-img"
-          style={{ transform: `scale(${scale})` }}
-          onClick={handleClick}
-        />
-        {clickPosition && (
+    <>
+      <div className="gameboard-container" ref={containerRef}>
+        <div>Time: {timer} seconds</div>
+        <div className="image-wrapper">
+          <img
+            src={img}
+            alt="PLACEHOLDER"
+            className="game-img"
+            style={{ transform: `scale(${scale})` }}
+            onClick={handleClick}
+          />
+          {clickPosition && (
+            <div
+              className="target-circle"
+              style={{
+                position: "absolute",
+                top: `${clickPosition.y}%`,
+                left: `${clickPosition.x}%`,
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                border: "2px solid red",
+                transform: "translate(-50%, -50%)",
+              }}
+            />
+          )}
+        </div>
+
+        {showDropdown && (
           <div
-            className="target-circle"
+            className="dropdown-menu"
             style={{
               position: "absolute",
-              top: `${clickPosition.y}%`,
-              left: `${clickPosition.x}%`,
-              width: "50px",
-              height: "50px",
-              borderRadius: "50%",
-              border: "2px solid red",
-              transform: "translate(-50%, -50%)",
+              top: dropdownPosition.y,
+              left: dropdownPosition.x,
             }}
-          />
+          >
+            {characters.map((character) => (
+              <div
+                key={character}
+                onClick={() => handleCharacterSelect(character)}
+                className="character-option"
+              >
+                {character}
+              </div>
+            ))}
+          </div>
         )}
       </div>
-      {showDropdown && (
-        <div
-          className="dropdown-menu"
-          style={{
-            position: "absolute",
-            top: dropdownPosition.y,
-            left: dropdownPosition.x,
-          }}
-        >
-          {characters.map((character) => (
-            <div
-              key={character}
-              onClick={() => handleCharacterSelect(character)}
-              className="character-option"
-            >
-              {character}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+      {isFinished && <NameModal time={timer} />}
+    </>
   );
 };
 
