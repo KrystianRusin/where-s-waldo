@@ -72,7 +72,7 @@ const GameBoard = ({ img, difficulty }) => {
       containerRef.current.getBoundingClientRect().width
     );
 
-    if (target && character === target.character) {
+    if (target) {
       setFoundTargets((prevFoundTargets) => [...prevFoundTargets, character]);
     }
     if (foundTargets.length === characters.length - 1) {
