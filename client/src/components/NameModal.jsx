@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/NameModal.css";
 
-const NameModal = ({ time, resetDifficulty }) => {
+const NameModal = ({ time, difficulty, resetDifficulty }) => {
   const [name, setName] = useState("");
 
   const handleSubmit = async (event) => {
@@ -12,7 +12,7 @@ const NameModal = ({ time, resetDifficulty }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, time }),
+      body: JSON.stringify({ name, time, difficulty }),
     });
 
     if (response.ok) {

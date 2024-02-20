@@ -49,7 +49,13 @@ app.get("/checkTarget", async (req, res) => {
 
 app.get("/leaderboard", async (req, res) => {
   try {
-    const leaderBoard = await LeaderBoard.find().sort({ time: 1 });
+    const difficulty = req.query.difficulty;
+    let leaderBoard;
+    if (difficulty) {
+      leaderBoard = await LeaderBoard.find({ difficulty }).sort({ time: 1 });
+    } else {
+      leaderBoard = await LeaderBoard.find().sort({ time: 1 });
+    }
     res.json(leaderBoard);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -60,6 +66,7 @@ app.post("/leaderboard", async (req, res) => {
   const leaderBoard = new LeaderBoard({
     name: req.body.name,
     time: req.body.time,
+    difficulty: req.body.difficulty,
   });
   console.log(leaderBoard);
   try {

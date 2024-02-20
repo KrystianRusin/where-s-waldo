@@ -44,7 +44,7 @@ function App() {
                   {isFinished && (
                     <NameModal
                       time={timer}
-                      setFinished={setIsFinished}
+                      difficulty={level}
                       resetDifficulty={resetDifficulty}
                     />
                   )}

@@ -1,6 +1,6 @@
 .leaderboard-card-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
   background-color: #020617;
@@ -8,5 +8,17 @@
   border-radius: 10px;
   box-shadow: 0 0 10px 0 #f5f5f5;
   width: 100%;
-  max-width: 40rem;
+  max-width: 80rem;
+  margin-bottom: 1rem;
+  color: #cbd5e1;
+}
+
+.leaderboard-card-container h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.leaderboard-card-container p {
+  margin: 0;
+  font-size: 1.2rem;
 }
