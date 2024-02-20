@@ -1,12 +1,23 @@
-.name-modal-conatiner {
+.name-modal-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100vw;
+  top: 0;
+  left: 0;
   position: absolute;
-  top: 50%;
-  left: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 100;
+}
+
+.name-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: rgb(30, 30, 30);
+  border-radius: 1rem;
 }

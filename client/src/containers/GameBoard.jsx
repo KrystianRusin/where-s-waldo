@@ -1,21 +1,47 @@
 import React, { useState, useEffect, useRef } from "react";
-import NameModal from "../components/NameModal";
 import checkTarget from "../utils/checkTarget";
-import checkIfWithinCircle from "../utils/checkIfWithinCircle";
 import "../styles/GameBoard.css";
 
-const GameBoard = ({ img, difficulty }) => {
+const GameBoard = ({
+  img,
+  difficulty,
+  isFinished,
+  setIsFinished,
+  timer,
+  setTimer,
+}) => {
   const [scale, setScale] = useState(1);
-  const [timer, setTimer] = useState(0);
   const containerRef = useRef(null);
 
   const [foundTargets, setFoundTargets] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [clickPosition, setClickPosition] = useState(null);
 
   const characters = ["Waldo", "Wizard Whitebeard"];
+
+  //useEffect to handle user zooming in/out
+  useEffect(() => {
+    const handleWheel = (e) => {
+      e.preventDefault();
+      const rect = e.target.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      e.target.style.transformOrigin = `${x}% ${y}%`;
+      if (e.deltaY < 0) {
+        // Zoom in
+        setScale((prevScale) => Math.min(prevScale + 0.1, 2));
+      } else {
+        // Zoom out
+        setScale((prevScale) => Math.max(prevScale - 0.1, 1));
+      }
+    };
+    const container = containerRef.current;
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   //useEffect to handle timer
   useEffect(() => {
@@ -133,7 +159,6 @@ const GameBoard = ({ img, difficulty }) => {
           </div>
         )}
       </div>
-      {isFinished && <NameModal time={timer} />}
     </>
   );
 };
