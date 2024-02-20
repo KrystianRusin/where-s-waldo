@@ -12,7 +12,7 @@ const checkTarget = async (difficulty, character, clickPosition, width) => {
     const data = JSON.parse(responseText);
     const circleCenter = { x: clickPosition.x, y: clickPosition.y };
     const point = { x: data.x, y: data.y }; // replace with actual data coordinates
-    const radius = (25 / width) * 100; // half of the width of the circle (50px / 2)
+    const radius = (25 / width) * 100;
     console.log("Circle Center: ", circleCenter);
     console.log("Radius: ", radius);
     console.log("Point: ", point);

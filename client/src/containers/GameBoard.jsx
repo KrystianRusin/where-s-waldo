@@ -68,7 +68,14 @@ const GameBoard = ({
     const rect = e.target.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    console.log("x: " + x + " y: " + y);
+    console.log("CLICK LOCATION:" + "x: " + x + " y: " + y);
+    console.log(
+      "CIRCLE LOCATION: " +
+        "x: " +
+        (x - 2.5 / scale) +
+        "y: " +
+        (y - 2.5 / scale)
+    );
 
     if (showDropdown) {
       setShowDropdown(false);
@@ -113,30 +120,29 @@ const GameBoard = ({
     <>
       <div className="gameboard-container" ref={containerRef}>
         <div>Time: {timer} seconds</div>
-        <div className="image-wrapper">
+        <div className="image-wrapper" style={{ position: "relative" }}>
           <img
             src={img}
             alt="PLACEHOLDER"
             className="game-img"
-            style={{ transform: `scale(${scale})` }}
+            style={{ transform: `scale(${scale})`, position: "relative" }}
             onClick={handleClick}
           />
-          {clickPosition && (
-            <div
-              className="target-circle"
-              style={{
-                position: "absolute",
-                top: `${clickPosition.y}%`,
-                left: `${clickPosition.x}%`,
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                border: "2px solid red",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          )}
         </div>
+        {clickPosition && (
+          <div
+            className="target-circle"
+            style={{
+              position: "absolute",
+              top: `calc(${dropdownPosition.y}px - 2.5%)`,
+              left: `calc(${dropdownPosition.x}px - 2.5%)`,
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              border: "2px solid red",
+            }}
+          />
+        )}
 
         {showDropdown && (
           <div
