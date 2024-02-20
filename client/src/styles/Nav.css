@@ -11,4 +11,19 @@
 .nav-contents {
   display: flex;
   gap: 2rem;
+  cursor: pointer;
+}
+
+.nav-contents a,
+.nav-contents a:visited {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.nav-contents a:hover {
+  color: #334155;
+}
+
+.active-link {
+  color: #cbd5e1;
 }

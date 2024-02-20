@@ -47,6 +47,15 @@ app.get("/checkTarget", async (req, res) => {
   }
 });
 
+app.get("/leaderboard", async (req, res) => {
+  try {
+    const leaderBoard = await LeaderBoard.find().sort({ time: 1 });
+    res.json(leaderBoard);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.post("/leaderboard", async (req, res) => {
   const leaderBoard = new LeaderBoard({
     name: req.body.name,
