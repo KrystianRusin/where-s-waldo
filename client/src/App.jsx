@@ -28,6 +28,7 @@ function App() {
   const resetDifficulty = () => {
     setLevel(null);
     setIsFinished(false);
+    setTimer(0);
   };
 
   return (
