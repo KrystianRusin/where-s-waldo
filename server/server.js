@@ -63,10 +63,18 @@ app.get("/leaderboard", async (req, res) => {
 });
 
 app.post("/leaderboard", async (req, res) => {
+  const date = new Date();
+  const formattedDate = date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   const leaderBoard = new LeaderBoard({
     name: req.body.name,
     time: req.body.time,
     difficulty: req.body.difficulty,
+    date: formattedDate,
   });
   console.log(leaderBoard);
   try {

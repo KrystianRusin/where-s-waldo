@@ -23,15 +23,39 @@ const LeaderBoard = () => {
 
   return (
     <div className="leaderboard-container">
-      {difficultyOptions.map((option, index) => (
-        <button key={index} onClick={() => setDifficultyFilter(option)}>
-          {option}
-        </button>
-      ))}
-      {difficultyFilter &&
-        leaderBoardData.map((item, index) => (
-          <LeaderBoardCard key={index} name={item.name} time={item.time} />
+      <div className="button-container">
+        {difficultyOptions.map((option, index) => (
+          <button
+            className="filter-button"
+            key={index}
+            onClick={() => setDifficultyFilter(option)}
+          >
+            {option}
+          </button>
         ))}
+      </div>
+      {difficultyFilter && (
+        <div className="leaderboard-grid">
+          <div className="leaderboard-header">Place</div>
+          <div className="leaderboard-header">Name</div>
+          <div className="leaderboard-header">Time</div>
+          <div className="leaderboard-header">Date</div>
+          {leaderBoardData.map((item, index) => (
+            <React.Fragment key={index}>
+              <div className="leaderboard-cell">{index + 1}</div>
+              <div className="leaderboard-cell">{item.name}</div>
+              <div className="leaderboard-cell">{item.time} Seconds</div>
+              <div className="leaderboard-cell">
+                {new Date(item.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
