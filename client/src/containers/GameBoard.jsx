@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import checkTarget from "../utils/checkTarget";
 import "../styles/GameBoard.css";
+import checkmark from "../assets/checkmark.png";
 
 const GameBoard = ({
   img,
@@ -19,6 +20,8 @@ const GameBoard = ({
   const [clickPosition, setClickPosition] = useState(null);
 
   const characters = ["Waldo", "Wizard Whitebeard"];
+
+  // TODO MAKE IT SO THAT GAME CHECKS THAT BOTH TARGETS HAVE BEEN FOUND NOT JUST ONE TWICE
 
   //useEffect to handle user zooming in/out
   useEffect(() => {
@@ -105,11 +108,16 @@ const GameBoard = ({
       containerRef.current.getBoundingClientRect().width
     );
 
-    if (target) {
-      setFoundTargets((prevFoundTargets) => [...prevFoundTargets, character]);
-    }
-    if (foundTargets.length === characters.length - 1) {
-      setIsFinished(true);
+    if (target && !foundTargets.includes(character)) {
+      setFoundTargets((prevFoundTargets) => {
+        const newFoundTargets = [...prevFoundTargets, character];
+
+        if (newFoundTargets.length === characters.length) {
+          setIsFinished(true);
+        }
+
+        return newFoundTargets;
+      });
     }
 
     setShowDropdown(false);
@@ -134,8 +142,8 @@ const GameBoard = ({
             className="target-circle"
             style={{
               position: "absolute",
-              top: `calc(${dropdownPosition.y}px - 2.5%)`,
-              left: `calc(${dropdownPosition.x}px - 2.5%)`,
+              top: `calc(${dropdownPosition.y}px - 1.5%)`,
+              left: `calc(${dropdownPosition.x}px - 1.5%)`,
               width: "50px",
               height: "50px",
               borderRadius: "50%",
@@ -160,6 +168,13 @@ const GameBoard = ({
                 className="character-option"
               >
                 {character}
+                {foundTargets.includes(character) && (
+                  <img
+                    src={checkmark}
+                    alt="checkmark"
+                    style={{ width: "20px", height: "20px" }}
+                  />
+                )}
               </div>
             ))}
           </div>
