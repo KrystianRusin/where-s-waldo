@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import checkTarget from "../utils/checkTarget";
 import "../styles/GameBoard.css";
 import checkmark from "../assets/checkmark.png";
+import checkIfWithinCircle from "../utils/checkIfWithinCircle";
 
 const GameBoard = ({
   img,
@@ -19,9 +19,19 @@ const GameBoard = ({
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [clickPosition, setClickPosition] = useState(null);
 
-  const characters = ["Waldo", "Wizard Whitebeard"];
+  const [characters, setCharacters] = useState([]);
 
-  // TODO MAKE IT SO THAT GAME CHECKS THAT BOTH TARGETS HAVE BEEN FOUND NOT JUST ONE TWICE
+  useEffect(() => {
+    fetch(
+      `https://where-waldo-api.adaptable.app/targets?difficulty=${difficulty}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setCharacters(data);
+        console.log(data);
+      })
+      .catch((error) => console.error(error));
+  }, [difficulty]);
 
   //useEffect to handle user zooming in/out
   useEffect(() => {
@@ -94,30 +104,36 @@ const GameBoard = ({
   const handleCharacterSelect = async (character) => {
     console.log(
       "Found " +
-        character +
+        character.targetName +
         " at x: " +
         clickPosition.x +
         " y: " +
         clickPosition.y
     );
 
-    const target = await checkTarget(
-      difficulty,
-      character,
-      clickPosition,
-      containerRef.current.getBoundingClientRect().width
+    const target = characters.find(
+      (target) => target.targetName === character.targetName
     );
 
-    if (target && !foundTargets.includes(character)) {
-      setFoundTargets((prevFoundTargets) => {
-        const newFoundTargets = [...prevFoundTargets, character];
+    if (target && !foundTargets.includes(character.targetName)) {
+      // Check if the click position is within the target circle
+      const isCorrect = checkIfWithinCircle(
+        { x: clickPosition.x, y: clickPosition.y },
+        { x: target.x, y: target.y },
+        (25 / containerRef.current.getBoundingClientRect().width) * 100
+      );
 
-        if (newFoundTargets.length === characters.length) {
-          setIsFinished(true);
-        }
+      if (isCorrect) {
+        setFoundTargets((prevFoundTargets) => {
+          const newFoundTargets = [...prevFoundTargets, character.targetName];
 
-        return newFoundTargets;
-      });
+          if (newFoundTargets.length === characters.length) {
+            setIsFinished(true);
+          }
+
+          return newFoundTargets;
+        });
+      }
     }
 
     setShowDropdown(false);
@@ -163,12 +179,12 @@ const GameBoard = ({
           >
             {characters.map((character) => (
               <div
-                key={character}
+                key={character.targetName}
                 onClick={() => handleCharacterSelect(character)}
                 className="character-option"
               >
-                {character}
-                {foundTargets.includes(character) && (
+                {character.targetName}
+                {foundTargets.includes(character.targetName) && (
                   <img
                     src={checkmark}
                     alt="checkmark"
