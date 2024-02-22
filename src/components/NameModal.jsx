@@ -7,13 +7,16 @@ const NameModal = ({ time, difficulty, resetDifficulty }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("http://localhost:5000/leaderboard", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, time, difficulty }),
-    });
+    const response = await fetch(
+      "https://where-waldo-api.adaptable.app/leaderboard",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, time, difficulty }),
+      }
+    );
 
     if (response.ok) {
       console.log("Response Worked: ", response);

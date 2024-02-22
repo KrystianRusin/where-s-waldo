@@ -2,7 +2,7 @@ import checkIfWithinCircle from "./checkIfWithinCircle";
 
 const checkTarget = async (difficulty, character, clickPosition, width) => {
   const response = await fetch(
-    `http://localhost:5000/checkTarget?difficulty=${difficulty}&targetName=${character}`
+    `https://where-waldo-api.adaptable.app/checkTarget?difficulty=${difficulty}&targetName=${character}`
   );
 
   // Log the raw response text

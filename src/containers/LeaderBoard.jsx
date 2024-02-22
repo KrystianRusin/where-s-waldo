@@ -12,7 +12,7 @@ const LeaderBoard = () => {
     if (difficultyFilter) {
       const fetchLeaderBoard = async () => {
         const response = await fetch(
-          `http://localhost:5000/leaderboard?difficulty=${difficultyFilter}`
+          `https://where-waldo-api.adaptable.app/leaderboard?difficulty=${difficultyFilter}`
         );
         const data = await response.json();
         setLeaderBoardData(data);
