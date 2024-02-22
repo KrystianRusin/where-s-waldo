@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import LeaderBoardCard from "../components/LeaderBoardCard";
 import "../styles/LeaderBoard.css";
 
 const LeaderBoard = () => {
